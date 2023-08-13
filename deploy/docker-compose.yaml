@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  ent-workspace:
+    image: golang:1.20.7
+    volumes:
+      - ../:/app
+    working_dir: /app
+    restart: always
+    networks:
+      - app-network
+    ports:
+      - "5000:8080"
+    command: tail -f /dev/null
+
+  ent-db:
+    image: mysql:5.6
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: go_ent_demo
+    volumes:
+      - ./mysql:/var/lib/mysql
+    restart: always
+    networks:
+      - app-network
+    ports:
+      - "5001:3306"
+
+  ent-redis:
+    image: redis:latest
+    restart: always
+    networks:
+      - app-network
+    ports:
+      - "5002:6379"
+
+networks:
+  app-network:
+    driver: bridge

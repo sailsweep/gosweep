@@ -1,0 +1,15 @@
+title = "ent-demo"
+
+[database]
+host = "ent-db"
+port = 3306
+db   = "go_ent_demo"
+user = "root"
+pass = "root"
+
+[redis]
+host = "ent-redis"
+port = 6379
+
+[server]
+port = 8080

@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ent-ns
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ent-user-service
+  namespace: ent-ns
+spec:
+  selector:
+    app: ent-user
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5000
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ent-user
+  namespace: ent-ns
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ent-user
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: ent-user
+    spec:
+      containers:
+        - name: ent-user
+          image: localhost:1000/ent-user:1.0.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+            requests:
+              cpu: "500m"
+              memory: "256Mi"
+      ports:
+        - name: http
+          containerPort: 5000
